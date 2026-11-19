@@ -13,6 +13,8 @@
  *   ADMIN_IDS              userId des administrateurs du bot, séparés par des virgules (commandes réservées)
  *   DEFAULT_LANG           fr (défaut) | en
  *   LOG_LEVEL              debug | info (défaut) | warn | error
+ *   CONCURRENCY            conversations traitées en parallèle en mode polling (défaut 16 ; l'ordre est
+ *                          toujours respecté DANS une conversation)
  *   GPCHAT_BASE_URL        pour pointer vers un autre environnement (rare)
  */
 const MODES = ['polling', 'webhook'];
@@ -34,6 +36,8 @@ function loadConfig(env = process.env) {
   if (mode === 'webhook' && secrets.length === 0) errors.push('GPCHAT_WEBHOOK_SECRET est obligatoire en mode webhook');
   const port = Number(env.PORT || 8080);
   if (!Number.isInteger(port) || port < 1 || port > 65535) errors.push(`PORT invalide : « ${env.PORT} »`);
+  const concurrency = Number(env.CONCURRENCY || 16);
+  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 256) errors.push(`CONCURRENCY doit être un entier entre 1 et 256 (reçu : « ${env.CONCURRENCY} »)`);
   const lang = (env.DEFAULT_LANG || 'fr').toLowerCase();
   if (!LANGS.includes(lang)) errors.push(`DEFAULT_LANG doit valoir ${LANGS.join(' ou ')}`);
 
@@ -47,6 +51,7 @@ function loadConfig(env = process.env) {
     apiKey: env.GPCHAT_API_KEY,
     webhookSecrets: secrets,
     port,
+    concurrency,
     dataDir: env.DATA_DIR === undefined ? './data' : env.DATA_DIR,
     adminIds: list(env.ADMIN_IDS),
     defaultLang: lang,

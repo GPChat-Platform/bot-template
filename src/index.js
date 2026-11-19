@@ -44,7 +44,7 @@ function main() {
     // Polling : le bot interroge GPChat (long polling 20 s) — aucun serveur public, aucun tunnel. Activez-le avec
     // « /setmode polling » dans @gpchat_forge. L'appel à /v1/updates valide aussi la publication du bot.
     ops.expectPolling(); // /readyz exige un polling réussi récent
-    stop = bot.poll(handle, { timeout: 20, onError: (e) => logger.warn('polling', { error: e.message }) });
+    stop = bot.poll(handle, { timeout: 20, concurrency: config.concurrency, onError: (e) => logger.warn('polling', { error: e.message }) });
     logger.info('polling démarré');
   }
 

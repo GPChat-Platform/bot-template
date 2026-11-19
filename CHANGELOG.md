@@ -4,6 +4,15 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versionnage
 
 ## [Non publié]
 
+## [1.1.0] — 2026-11-20
+
+### Modifié
+- SDK GPChat 1.1.1 embarqué : en polling, les conversations sont traitées **en parallèle** (`CONCURRENCY`, 16 par défaut) tout en gardant l'ordre des messages dans chaque conversation ; acquittement rapide ; un événement en échec est réessayé après 30 s.
+- `sendChatAction()` ne réessaie plus (indicateur « écrit… » purement cosmétique) : sous forte charge, les nouveaux essais consommaient le quota.
+
+### Ajouté
+- Variable `CONCURRENCY` (validée au démarrage).
+
 ## [1.0.0] — 2026-11-19
 
 ### Ajouté
