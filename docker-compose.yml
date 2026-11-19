@@ -1,0 +1,17 @@
+# docker compose up -d --build   (lit .env)
+services:
+  bot:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATA_DIR: /data
+    volumes: ["bot-data:/data"]
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    # Mode webhook : exposez le port derrière un reverse proxy HTTPS (jamais en clair sur Internet)
+    # ports: ["127.0.0.1:8080:8080"]
+volumes:
+  bot-data:

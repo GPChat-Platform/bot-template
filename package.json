@@ -1,0 +1,16 @@
+{
+  "name": "gpchat-bot-template",
+  "version": "1.0.0",
+  "description": "Modèle officiel de bot GPChat : polling ou webhook signé, boutons, Markdown, dédoublonnage, tests, Docker, CI",
+  "license": "MIT",
+  "private": true,
+  "main": "src/index.js",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node src/index.js",
+    "check": "node src/index.js --check",
+    "commands": "node scripts/print-commands.js",
+    "test": "node --test"
+  },
+  "keywords": ["gpchat", "bot", "template"]
+}
