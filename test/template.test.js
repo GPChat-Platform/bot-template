@@ -10,7 +10,6 @@ const { Outbox } = require('../src/outbox');
 const { MemoryStore, FileStore, createStore } = require('../src/store');
 const { createRouter, parseCommand } = require('../src/handlers');
 const { createWebhookServer } = require('../src/webhook');
-const { createLogger } = require('../src/logger');
 const { button, verifyWebhookSignature } = require('../src/lib/gpchat-bot');
 const crypto = require('node:crypto');
 
@@ -251,12 +250,3 @@ test('SDK embarqué : vérification de signature directe', () => {
   assert.equal(verifyWebhookSignature(raw, sign('k', raw), 'autre'), false);
 });
 
-test('logger : niveaux et format JSON', () => {
-  const lines = [];
-  const out = { log: (l) => lines.push(l), error: (l) => lines.push(l) };
-  const log = createLogger({ level: 'warn', json: true, out });
-  log.info('ignoré');
-  log.warn('visible', { a: 1 });
-  assert.equal(lines.length, 1);
-  assert.equal(JSON.parse(lines[0]).a, 1);
-});

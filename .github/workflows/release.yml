@@ -1,0 +1,40 @@
+name: Release
+# Déclenché par une étiquette vX.Y.Z (créée par scripts/release.mjs) : tests, image Docker sur GHCR, Release GitHub.
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+  packages: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: La version de l'étiquette correspond à package.json
+        run: |
+          PKG=$(node -p "require('./package.json').version")
+          [ "v$PKG" = "${GITHUB_REF_NAME}" ] || { echo "::error::Étiquette ${GITHUB_REF_NAME} ≠ package.json $PKG"; exit 1; }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - name: Notes de version extraites du CHANGELOG
+        run: node scripts/release-notes.js "${GITHUB_REF_NAME}" > RELEASE_NOTES.md
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/gpchat-platform/bot-template:${{ github.ref_name }}
+            ghcr.io/gpchat-platform/bot-template:latest
+      - name: Release GitHub
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --notes-file RELEASE_NOTES.md

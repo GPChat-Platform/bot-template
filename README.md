@@ -19,7 +19,7 @@ Le **modèle officiel** pour créer un bot [GPChat](https://gpchat.app) : un vra
 | **Limites de l'API gérées** | file d'envoi espacée (60 requêtes/minute par clé), erreurs d'un envoi isolées |
 | **Robustesse** | configuration validée au démarrage, erreurs → message poli à l'utilisateur, arrêt propre, journaux JSON |
 | **Préférences utilisateur** | langue FR/EN (`/lang`), store à interface minuscule (mémoire ou fichier JSON atomique, remplaçable par Redis/SQL) |
-| **Qualité** | 17 tests sans réseau (`npm test`), CI GitHub Actions (Node 20/22 + build Docker), Dockerfile durci, `docker-compose.yml` |
+| **Qualité** | 21 tests sans réseau (`npm test`), CI GitHub Actions (Node 20/22 + build Docker), Dockerfile durci, `docker-compose.yml` |
 | **SDK inclus** | `src/lib/gpchat-bot.js` (officiel, sans dépendance) — rien à installer |
 
 ### Démarrer en 3 minutes
@@ -33,7 +33,7 @@ cp .env.example .env        # collez la clé dans GPCHAT_API_KEY
 
 # 3. Lancez
 npm start                   # → « polling démarré » ; écrivez /start à votre bot dans l'app GPChat
-npm test                    # 17 tests
+npm test                    # 21 tests
 ```
 
 Aucune dépendance à installer (Node.js ≥ 20 suffit).
@@ -80,6 +80,11 @@ docker compose up -d --build        # lit .env, données persistantes dans un vo
 
 Voir [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) pour l'organisation du code, les choix de conception et les pistes (persistance Redis/SQL, hébergement serverless).
 
+### Exploitation et versions
+
+- Journaux JSON, `/healthz` `/readyz` `/metrics`, alertes GPChat : [`docs/OPERATIONS.md`](docs/OPERATIONS.md).
+- SemVer, `CHANGELOG.md`, `node scripts/release.mjs` : [`docs/VERSIONING.md`](docs/VERSIONING.md).
+
 ### Aller plus loin
 
 - [Documentation développeur](https://gpchat.app/developers/docs) · [Tutoriel pas à pas](https://gpchat.app/developers/tutorial-ai-bot) · [Référence API](https://gpchat.app/developers/api-reference)
@@ -99,7 +104,7 @@ Voir [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) pour l'organisation du code,
 | **API limits handled** | spaced send queue (60 requests/minute per key), per-send error isolation |
 | **Robustness** | config validated at startup, errors → polite user message, graceful shutdown, JSON logs |
 | **User preferences** | FR/EN language (`/lang`), tiny-interface store (memory or atomic JSON file, swappable for Redis/SQL) |
-| **Quality** | 17 network-free tests (`npm test`), GitHub Actions CI (Node 20/22 + Docker build), hardened Dockerfile, `docker-compose.yml` |
+| **Quality** | 21 network-free tests (`npm test`), GitHub Actions CI (Node 20/22 + Docker build), hardened Dockerfile, `docker-compose.yml` |
 | **SDK included** | `src/lib/gpchat-bot.js` (official, dependency-free) — nothing to install |
 
 ### Get started in 3 minutes
@@ -136,6 +141,10 @@ docker compose up -d --build        # reads .env, persistent data in a volume
 ```
 
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the code layout and design choices.
+
+### Operations and versions
+
+JSON logs, `/healthz` `/readyz` `/metrics`, GPChat alerts: [`docs/OPERATIONS.md`](docs/OPERATIONS.md). SemVer, `CHANGELOG.md` and `node scripts/release.mjs`: [`docs/VERSIONING.md`](docs/VERSIONING.md).
 
 ### Learn more
 

@@ -5,12 +5,19 @@
   "license": "MIT",
   "private": true,
   "main": "src/index.js",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node src/index.js",
     "check": "node src/index.js --check",
     "commands": "node scripts/print-commands.js",
-    "test": "node --test"
+    "test": "node --test",
+    "release": "node scripts/release.mjs"
   },
-  "keywords": ["gpchat", "bot", "template"]
+  "keywords": [
+    "gpchat",
+    "bot",
+    "template"
+  ]
 }
