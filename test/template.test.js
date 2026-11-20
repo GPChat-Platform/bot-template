@@ -100,7 +100,7 @@ test('store : mémoire, fichier atomique, relecture', () => {
 
 test('parseCommand : commandes, suffixe @bot, arguments, texte libre', () => {
   assert.deepEqual(parseCommand('/echo bonjour le monde'), { name: 'echo', args: 'bonjour le monde' });
-  assert.deepEqual(parseCommand('/START@mon_bot'), { name: 'start', args: '' });
+  assert.deepEqual(parseCommand('/START@Mon_Bot'), { name: 'start', args: '', bot: 'mon_bot' });
   assert.equal(parseCommand('bonjour'), null);
   assert.equal(parseCommand(''), null);
 });
@@ -250,3 +250,13 @@ test('SDK embarqué : vérification de signature directe', () => {
   assert.equal(verifyWebhookSignature(raw, sign('k', raw), 'autre'), false);
 });
 
+
+test('groupe : une commande adressée à un autre bot est ignorée (BOT_USERNAME)', async () => {
+  const { bot, router } = setup({ config: { botUsername: 'mon_bot' } });
+  const g = (textMsg) => router.handle({ type: 'group_message.received', data: { from: 'u1', groupId: 'G', type: 'text', textMsg, msgId: `g${Math.random()}` } });
+  await g('/ping@autre_bot');
+  assert.equal(bot.sent.length, 0);
+  await g('/ping@Mon_Bot');
+  await g('/ping');
+  assert.equal(bot.sent.length, 2);
+});

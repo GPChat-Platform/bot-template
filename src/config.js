@@ -13,6 +13,7 @@
  *   ADMIN_IDS              userId des administrateurs du bot, séparés par des virgules (commandes réservées)
  *   DEFAULT_LANG           fr (défaut) | en
  *   LOG_LEVEL              debug | info (défaut) | warn | error
+ *   BOT_USERNAME           @nom du bot (facultatif) : en groupe, les commandes « /cmd@autre_bot » sont ignorées
  *   CONCURRENCY            conversations traitées en parallèle en mode polling (défaut 16 ; l'ordre est
  *                          toujours respecté DANS une conversation)
  *   GPCHAT_BASE_URL        pour pointer vers un autre environnement (rare)
@@ -54,6 +55,7 @@ function loadConfig(env = process.env) {
     concurrency,
     dataDir: env.DATA_DIR === undefined ? './data' : env.DATA_DIR,
     adminIds: list(env.ADMIN_IDS),
+    botUsername: (env.BOT_USERNAME || '').replace(/^@/, '').toLowerCase() || undefined,
     defaultLang: lang,
     logLevel: (env.LOG_LEVEL || 'info').toLowerCase(),
     baseUrl: env.GPCHAT_BASE_URL || undefined,

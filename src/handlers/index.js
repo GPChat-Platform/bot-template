@@ -11,10 +11,17 @@
 const { commands, callbacks } = require('./commands');
 const { t } = require('../i18n');
 
-/** « /echo@mon_bot bonjour » → { name: 'echo', args: 'bonjour' } ; texte sans « / » → null */
+/**
+ * « /echo@mon_bot bonjour » → { name: 'echo', args: 'bonjour', bot: 'mon_bot' } ; texte sans « / » → null.
+ * En groupe, « /commande@nom_du_bot » ne concerne QUE ce bot (convention Telegram) ; la plateforme ne le remet
+ * qu'à lui, et le routeur l'ignore aussi si BOT_USERNAME est renseigné (protection supplémentaire).
+ */
 function parseCommand(text) {
-  const m = /^\/([a-zA-Z0-9_]{1,32})(?:@\w+)?(?:\s+([\s\S]*))?$/.exec(String(text || '').trim());
-  return m ? { name: m[1].toLowerCase(), args: (m[2] || '').trim() } : null;
+  const m = /^\/([a-zA-Z0-9_]{1,32})(?:@(\w+))?(?:\s+([\s\S]*))?$/.exec(String(text || '').trim());
+  if (!m) return null;
+  const cmd = { name: m[1].toLowerCase(), args: (m[3] || '').trim() };
+  if (m[2]) cmd.bot = m[2].toLowerCase();
+  return cmd;
 }
 
 function createRouter({ outbox, store, config, logger, dedupe, button }) {
@@ -45,6 +52,8 @@ function createRouter({ outbox, store, config, logger, dedupe, button }) {
     const cmd = d.type === 'text' ? parseCommand(d.textMsg) : null;
 
     if (isGroup && !cmd && !d.isMentioned) return; // règle d'or en groupe : silence sauf commande ou mention
+    // Commande adressée à un autre bot du groupe (« /aide@autre_bot ») : pas pour nous.
+    if (isGroup && cmd && cmd.bot && config.botUsername && cmd.bot !== config.botUsername) return;
     const base = { chat, userId: d.from, msgId: d.msgId, isGroup };
 
     if (!cmd) {
