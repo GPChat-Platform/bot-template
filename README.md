@@ -5,6 +5,8 @@ Le **modèle officiel** pour créer un bot [GPChat](https://gpchat.app) : un vra
 
 [Français](#français) · [English](#english)
 
+> **Autres langages / other languages** : **JavaScript** · [TypeScript](https://github.com/GPChat-Platform/bot-template-ts) · [Python](https://github.com/GPChat-Platform/bot-template-python) · [Go](https://github.com/GPChat-Platform/bot-template-go) · [Java (Quarkus)](https://github.com/GPChat-Platform/bot-template-quarkus)
+
 ---
 
 ## Français
